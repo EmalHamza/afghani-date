@@ -1,0 +1,29 @@
+{
+  "name": "emalhamza/afghani-date",
+  "description": "A package for converting Gregorian dates to Afghan (Hijri) dates and vice versa.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Emal Hamza",
+      "email": "emalhamza@example.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^7.4|^8.0",
+    "nesbot/carbon": "^2.50"
+  },
+  "autoload": {
+    "psr-4": {
+      "EmalHamza\\AfghaniDate\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "EmalHamza\\AfghaniDate\\AfghaniDateServiceProvider"
+      ]
+    }
+  }
+}
