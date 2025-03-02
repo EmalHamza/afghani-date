@@ -71,7 +71,14 @@ class AfghaniDate
     private static function getAfghaniDay($daysDifference, $afghaniMonth)
     {
         $monthLengths = [31, 31, 31, 30, 31, 30, 31, 31, 30, 31, 30, 29]; // Afghan month lengths
-        return $daysDifference + 1; // Afghan days start from 1, not 0
+        // Subtract days corresponding to the previous months from the difference
+        for ($i = 0; $i < $afghaniMonth - 1; $i++) {
+            $daysDifference -= $monthLengths[$i];
+        }
+
+        // Return the day of the Afghan month (no decimals, always integer)
+        return (int)$daysDifference + 1;
     }
 }
+
 
