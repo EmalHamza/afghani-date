@@ -15,63 +15,10 @@ class AfghaniDate
     {
         $gregorian = Carbon::parse($gregorianDate);
 
-        // Define the Afghan Solar Hijri conversion logic
-        $gregorianYear = $gregorian->year;
-        $gregorianMonth = $gregorian->month;
-        $gregorianDay = $gregorian->day;
+        // Convert using afghani Calendar (which Afghanistan uses)
+        $afghaniDate = self::gregorianToAfghani($gregorian->year, $gregorian->month, $gregorian->day);
 
-        // Step 1: Determine the starting date of the Afghan year (Nowruz)
-        $startOfYear = Carbon::createFromDate($gregorianYear, 3, 21); // March 21st, as Nowruz
-        $isLeapYear = $gregorian->isLeapYear();
-
-        // Step 2: Calculate the difference between the two dates
-        $daysDifference = $startOfYear->diffInDays($gregorian);
-
-        // Step 3: Find Afghan year
-        $afghaniYear = $gregorianYear - 621; // Afghan year is about 621 years behind Gregorian year
-        if ($gregorianMonth <= 3 && $gregorianDay < 21) {
-            $afghaniYear--; // If the date is before Nowruz, subtract 1 from Afghan year
-        }
-
-        // Step 4: Convert to Afghan month and day
-        $afghaniMonth = self::getAfghaniMonth($daysDifference);
-        $afghaniDay = self::getAfghaniDay($daysDifference, $afghaniMonth);
-
-        return "{$afghaniYear}/{$afghaniMonth}/{$afghaniDay}";
-    }
-
-    /**
-     * Get Afghan month number from the difference in days.
-     *
-     * @param int $daysDifference
-     * @return int
-     */
-    private static function getAfghaniMonth($daysDifference)
-    {
-        $monthLengths = [31, 31, 31, 30, 31, 30, 31, 31, 30, 31, 30, 29];
-        $month = 1;
-        foreach ($monthLengths as $length) {
-            if ($daysDifference < $length) {
-                break;
-            }
-            $daysDifference -= $length;
-            $month++;
-        }
-
-        return $month;
-    }
-
-    /**
-     * Get Afghan day based on the remaining days in the month.
-     *
-     * @param int $daysDifference
-     * @param int $afghaniMonth
-     * @return int
-     */
-    private static function getAfghaniDay($daysDifference, $afghaniMonth)
-    {
-        $monthLengths = [31, 31, 31, 30, 31, 30, 31, 31, 30, 31, 30, 29];
-        return $daysDifference + 1; // Afghan days start from 1, not 0
+        return "{$afghaniDate[0]}/{$afghaniDate[1]}/{$afghaniDate[2]}";
     }
 
     /**
@@ -84,34 +31,67 @@ class AfghaniDate
     {
         list($afghaniYear, $afghaniMonth, $afghaniDay) = explode('/', $afghaniDate);
 
-        // Step 1: Convert the Afghan year to the equivalent Gregorian year
-        $gregorianYear = $afghaniYear + 621;
-        if ($afghaniMonth <= 3) {
-            $gregorianYear++; // Adjust for the change in year before Nowruz
-        }
+        $gregorianDate = self::afghaniToGregorian((int)$afghaniYear, (int)$afghaniMonth, (int)$afghaniDay);
 
-        // Step 2: Calculate the days offset from the start of the year
-        $daysInMonth = self::getAfghaniMonthDays($afghaniMonth);
-        $daysDifference = ($afghaniDay - 1) + ($daysInMonth * ($afghaniMonth - 1));
-
-        // Step 3: Get the start of the Afghan year (Nowruz)
-        $startOfYear = Carbon::createFromDate($gregorianYear, 3, 21);
-
-        // Step 4: Add the offset to get the Gregorian date
-        $gregorianDate = $startOfYear->addDays($daysDifference);
-
-        return $gregorianDate->format('Y-m-d');
+        return Carbon::create($gregorianDate[0], $gregorianDate[1], $gregorianDate[2])->format('Y-m-d');
     }
 
     /**
-     * Get the number of days in the month for Afghan dates.
+     * Convert Gregorian to Afghani (Afghan Solar Hijri) Calendar
+     * Algorithm based on afghani Calendar system
      *
-     * @param int $month
-     * @return int
+     * @param int $gy
+     * @param int $gm
+     * @param int $gd
+     * @return array
      */
-    private static function getAfghaniMonthDays($month)
+    private static function gregorianToAfghani($gy, $gm, $gd)
     {
-        $monthLengths = [31, 31, 31, 30, 31, 30, 31, 31, 30, 31, 30, 29];
-        return $monthLengths[$month - 1]; // Afghan months are 1-indexed
+        $g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+        $jy = $gy - 621;
+        $days = ($g_d_m[$gm - 1] + $gd) - (($gy % 4 == 0 && $gm > 2) ? 1 : 0);
+        if ($days > 79) {
+            $days -= 79;
+            if ($days <= 186) {
+                $jm = ceil($days / 31);
+                $jd = ($days % 31) ?: 31;
+            } else {
+                $days -= 186;
+                $jm = ceil($days / 30) + 6;
+                $jd = ($days % 30) ?: 30;
+            }
+        } else {
+            $jy--;
+            $days += 286;
+            $jm = ceil($days / 30) + 9;
+            $jd = ($days % 30) ?: 30;
+        }
+        return [$jy, $jm, $jd];
+    }
+
+    /**
+     * Convert Afghani (Afghan Solar Hijri) to Gregorian Calendar
+     *
+     * @param int $jy
+     * @param int $jm
+     * @param int $jd
+     * @return array
+     */
+    private static function afghaniToGregorian($jy, $jm, $jd)
+    {
+        $gy = $jy + 621;
+        $days = ($jm <= 6) ? (($jm - 1) * 31 + $jd) : (($jm - 7) * 30 + $jd + 186);
+        $g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
+        if ($days > ($gy % 4 == 0 ? 366 : 365)) {
+            $gy++;
+            $days -= ($gy % 4 == 0 ? 366 : 365);
+        }
+        for ($gm = 1; $gm < 13; $gm++) {
+            if ($days <= $g_d_m[$gm]) {
+                $gd = $days - $g_d_m[$gm - 1];
+                break;
+            }
+        }
+        return [$gy, $gm, $gd];
     }
 }
