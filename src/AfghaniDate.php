@@ -20,7 +20,7 @@ class AfghaniDate
         $gregorianDay = $date->day;
 
         // Define the start of the Afghan year (Nowruz on March 19)
-        $startOfYear = Carbon::create($gregorianYear, 2, 19); 
+        $startOfYear = Carbon::create($gregorianYear, 2, 19); // this is start of date
         $afghaniYear = $gregorianYear - 621;
 
         // If the date is before Nowruz, move to the previous Afghan year
