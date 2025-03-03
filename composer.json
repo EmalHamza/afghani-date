@@ -1,6 +1,6 @@
 {
     "name": "emalhamza/afghani-date",
-    "version": "1.5.0",
+    "version": "1.7.0",
     "description": "A package for converting Gregorian dates to Afghan (Hijri) dates and vice versa.",
     "type": "library",
     "license": "MIT",
