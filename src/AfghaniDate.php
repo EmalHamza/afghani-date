@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace EmalHamza\AfghaniDate;
 
 use Carbon\Carbon;
 
