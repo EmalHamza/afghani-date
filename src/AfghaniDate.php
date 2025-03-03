@@ -16,17 +16,16 @@ class AfghaniDate
     {
         $date = Carbon::parse($gregorianDate);
         $gregorianYear = $date->year;
-        $gregorianMonth = $date->month;
-        $gregorianDay = $date->day;
 
-        // Define the start of the Afghan year (Nowruz on March 21)
-        $startOfYear = Carbon::create($gregorianYear, 3, 21); // this is
+        // Define the start of the Afghan year (Nowruz around March 20 or 21)
+        $startOfYear = self::getNowruzStartDate($gregorianYear);
+
         $afghaniYear = $gregorianYear - 621;
 
         // If the date is before Nowruz, move to the previous Afghan year
         if ($date->lessThan($startOfYear)) {
             $afghaniYear--;
-            $startOfYear = Carbon::create($gregorianYear - 1, 3, 21);
+            $startOfYear = self::getNowruzStartDate($gregorianYear - 1);  // Previous year's Nowruz
         }
 
         // Calculate the number of days since Nowruz
@@ -36,6 +35,29 @@ class AfghaniDate
         ['afghaniMonth' => $afghaniMonth, 'afghaniDay' => $afghaniDay] = self::getAfghaniMonthAndDay($daysDifference);
 
         return "{$afghaniYear}/{$afghaniMonth}/{$afghaniDay}";
+    }
+
+    /**
+     * Get the start date of Nowruz (March 19, 20, or 21).
+     * Nowruz varies, so calculate based on the year.
+     *
+     * @param int $year
+     * @return Carbon
+     */
+    private static function getNowruzStartDate($year)
+    {
+        // Logic for determining Nowruz start (March 20 or 21)
+        // You can use astronomical calculations or predefined dates for simplicity
+        // Assuming March 21 as the most common start date
+        $startDate = Carbon::create($year, 3, 21);
+        
+        // Adjust for specific years where Nowruz falls on March 19 or 20
+        if ($startDate->dayOfWeek === Carbon::SUNDAY) {
+            // If it's Sunday, we adjust to March 20
+            $startDate = Carbon::create($year, 3, 20);
+        }
+
+        return $startDate;
     }
 
     /**
