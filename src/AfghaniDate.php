@@ -681,6 +681,6 @@ class AfghaniDate
             return "{$gDay}/{$gMonth}/{$gYear}";
         }
 
-        return null; // If format is not matched
+        return self::toAfghaniDate($date);
     }
 }
