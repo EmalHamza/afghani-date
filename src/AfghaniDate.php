@@ -24,8 +24,8 @@ class AfghaniDate
         $monthsPashto = ["وری", "غویی", "غبرګولی", "چنګاښ", "زمری", "وږی", "تله", "لړم", "لېندۍ", "مرغومی", "سلواغه", "کب"];
 
         // Select appropriate language for week and months
-        $week = ($language == 'da') ? $weekDari : $weekPashto;
-        $months = ($language == 'da') ? $monthsDari : $monthsPashto;
+        $week = ($language == 'da') ? $weekPashto : $weekDari;
+        $months = ($language == 'da') ? $monthsPashto : $monthsDari;
         
         // Parse the input Gregorian date (format: YYYY/MM/DD)
         $date = Carbon::parse($gregorianDate);
