@@ -14,7 +14,7 @@ class AfghaniDate
      * @param string $language (optional: "pashto", "dari")
      * @return string
      */
-    public static function toAfghaniDate($gregorianDate, $format = null, $language = 'ps')
+    public static function toAfghaniDate($gregorianDate, $format = null, $language = "ps")
     {
         $weekDari = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه"];
         $monthsDari = ["حمل", "ثور", "جوزا", "سرطان", "اسد", "سنبله", "میزان", "عقرب", "قوس", "جدی", "دلو", "حوت"];
@@ -23,8 +23,8 @@ class AfghaniDate
         $monthsPashto = ["وری", "غویی", "غبرګولی", "چنګاښ", "زمری", "وږی", "تله", "لړم", "لېندۍ", "مرغومی", "سلواغه", "کب"];
 
         // Select appropriate language
-        $week = ($language == 'da') ? $weekDari : $weekDari;
-        $months = ($language == 'da') ? $monthsDari : $monthsDari;
+        $week = ($language == "da") ? $weekDari : $weekDari;
+        $months = ($language == "da") ? $monthsDari : $monthsDari;
 
 
         // Parse the input Gregorian date (format: YYYY/MM/DD)
