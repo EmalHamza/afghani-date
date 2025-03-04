@@ -332,7 +332,7 @@ class AfghaniDate
         
 
         // Format the output based on the format option
-        if ($format === null || $format === undefined) {
+        if ($format === null || $format === 'undefined') {
             return "{$week[$date->dayOfWeek]} {$gDay} {$months[$gMonth - 1]} {$gYear}";
         }
         if ($format === "y/m/d") {
