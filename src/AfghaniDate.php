@@ -13,18 +13,11 @@ class AfghaniDate
      * @param string|null $format (optional: "y/m/d", "d/m/y")
      * @return string
      */
-    public static function toAfghaniDate($gregorianDate, $format = null, $language = 'ps')
+    public static function toAfghaniDate($gregorianDate, $format = null)
     {
-        // Define days and months in Dari and Pashto
-        $weekDari = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه"];
-        $monthsDari = ["حمل", "ثور", "جوزا", "سرطان", "اسد", "سنبله", "میزان", "عقرب", "قوس", "جدی", "دلو", "حوت"];
-        
-        $weekPashto = ["یوه نۍ", "دوه نۍ", "درېنۍ", "څلورنۍ", "پنځنۍ", "ادینه", "خالي"];
-        $monthsPashto = ["وری", "غویی", "غبرګولی", "چنګاښ", "زمری", "وږی", "تله", "لړم", "لېندۍ", "مرغومی", "سلواغه", "کب"];
+        $week = ["یوه نۍ", "دوه نۍ", "درېنۍ", "څلورنۍ", "پنځنۍ", "ادینه", "خالي"];
+        $months = ["وری", "غویی", "غبرګولی", "چنګاښ", "زمری", "وږی", "تله", "لړم", "لېندۍ", "مرغومی", "سلواغه", "کب"];
 
-        // Select appropriate language for week and months
-        $week = ($language == 'da') ? $weekPashto : $weekDari;
-        $months = ($language == 'da') ? $monthsPashto : $monthsDari;
         
         // Parse the input Gregorian date (format: YYYY/MM/DD)
         $date = Carbon::parse($gregorianDate);
