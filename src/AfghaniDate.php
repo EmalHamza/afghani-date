@@ -15,7 +15,7 @@ class AfghaniDate
      */
     public static function toAfghaniDate($gregorianDate, $format = null)
     {
-        $week = ["یوه نۍ", "دوه نۍ", "درېنۍ", "څلورنۍ", "پنځنۍ", "ادینه", "خالي"];
+        $week = ["یونۍ", "دوې نۍ", "درې نۍ", "څلورنۍ", "پنځه نۍ", "جمعه", "پیلنۍ"];
         $months = ["وری", "غویی", "غبرګولی", "چنګاښ", "زمری", "وږی", "تله", "لړم", "لېندۍ", "مرغومی", "سلواغه", "کب"];
 
         // Parse the input Gregorian date (format: YYYY/MM/DD)
